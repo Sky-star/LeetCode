@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode.cn id=226 lang=swift
+ * @lc app=leetcode.cn id=98 lang=swift
  *
- * [226] 翻转二叉树
+ * [98] 验证二叉搜索树
  */
 
 // @lc code=start
@@ -19,19 +19,8 @@
  * }
  */
 class Solution {
-    func invertTree(_ root: TreeNode?) -> TreeNode? {
-        guard let item = root else {
-            return nil
-        }
-
-        let tempNode = item.left
-        item.left = item.right
-        item.right = tempNode
-
-        invertTree(item.left)
-        invertTree(item.right)
+    func isValidBST(_ root: TreeNode?) -> Bool {
         
-        return item
     }
 }
 // @lc code=end
