@@ -22,37 +22,29 @@
 class Codec {
 
     func serialize(_ root: TreeNode?) -> String {
-        return reserialize(root, "")
-    }
-
-    func reserialize(_ root: TreeNode?, _ string: String) -> String {
-        var result = string
-        if let item = root {
-            result += String(item.val) + ","
-            result = reserialize(item.left,result)
-            result = reserialize(item.right,result)
-        }else {
-            result += "None,"
+        guard let root = root else {
+            return "None,"
         }
 
-        return result
+        return String(root.val) + "," + serialize(root.left) + serialize(root.right)
     }
     
     func deserialize(_ data: String) -> TreeNode? {
-        print(data)
-        if data.isEmpty {
-            return nil
-        }
-
-        let arr = data.split(separator: ",")
-
-        for str in arr {
-            
+        var arr = data.split(separator: ",").map{ string in
+            Int(String(string))
         }
         
-        print(arr)
-
-        return nil
+        return redeserialize(&arr)
+    }
+    
+    func redeserialize(_ data: inout [Int?]) -> TreeNode? {
+        guard let val = data.removeFirst() else { return nil }
+        
+        let root = TreeNode(val)
+        root.left = redeserialize(&data)
+        root.right = redeserialize(&data)
+        
+        return root
     }
 }
 
