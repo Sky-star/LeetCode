@@ -9,35 +9,38 @@ class Solution {
 
     func permuteUnique(_ nums: [Int]) -> [[Int]] {
         var res = [[Int]]()
-        var output = [Int]()
+        if nums.isEmpty { return res }
+        var used = Array(repeatElement(false, count: nums.count))
+        var list = [Int]()
         
-        output.append(contentsOf: nums)
-        
-        backtrack(nums.count, &output, &res, 0)
+        backtrack(nums.sorted(), &used, &res, &list)
         
         return res
+        
     }
 
-    func backtrack(_ n: Int, _ output: inout [Int], _ res: inout [[Int]], _ first: Int) {
-        if first == n {
-            res.append(output)
+    func backtrack(_ nums: [Int], _ used: inout [Bool], _ res: inout [[Int]], _ list: inout [Int]) {
+        if list.count == nums.count {
+            res.append(list)
+            return
         }
         
-        for i in first ..< n {
+        for i in 0..<nums.count {
+            if used[i] { continue }
             
-            if first != i && output[first] == output[i] {
+            if i > 0 && nums[i-1] == nums[i] && !used[i-1] {
                 continue
             }
             
-            // print("first: \(first)")
-            // print("i: \(i)")
-            // print(output)
+            used[i] = true
             
-            output.swapAt(first, i)
+            list.append(nums[i])
             
-            backtrack(n, &output, &res, first + 1)
+            backtrack(nums, &used, &res, &list)
             
-            output.swapAt(first, i)
+            used[i] = false
+            
+            list.removeLast()
         }
     }
 }
