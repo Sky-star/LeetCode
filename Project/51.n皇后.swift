@@ -6,25 +6,22 @@
 
 // @lc code=start
 class Solution {
-    var cols = [Int]()
-    var pie  = [Int]()
-    var na   = [Int]()
+    var cols = Set<Int>()
+    var pie  = Set<Int>()
+    var na   = Set<Int>()
     var res  = [[String]]()
     
     func solveNQueens(_ n: Int) -> [[String]] {
         if n < 1 {
             return [[String]]()
         }
-        
-        var cur = [String]()
-        
-        backtrack(n, 0, &cur)
+                
+        backtrack(n, 0, [String]())
         
         return generateResult(n)
     }
     
-    func backtrack(_ n: Int, _ row: Int, _ currentState: inout [String]) {
-        print(row)
+    func backtrack(_ n: Int, _ row: Int, _ currentState: [String]) {
         if row >= n {
             self.res.append(currentState)
             return
@@ -35,31 +32,35 @@ class Solution {
                 continue
             }
             
-            self.cols.append(col)
-            self.pie.append(col + row)
-            self.na.append(row - col)
+            self.cols.insert(col)
+            self.pie.insert(col + row)
+            self.na.insert(row - col)
+                                                
+            backtrack(n, row + 1, currentState + [String(col)])
             
-            currentState += [String(col)]
-                        
-            backtrack(n, row + 1, &currentState)
-            
-            self.cols.removeAll(where: {$0 == col})
-            self.pie.removeAll(where: {$0 == (row + col)})
-            self.na.removeAll(where: {$0 == (row - col)})
+            self.cols.remove(col)
+            self.pie.remove(row + col)
+            self.na.remove(row - col)
         }
     }
     
     func generateResult(_ n: Int) -> [[String]] {
         var board = [[String]]()
-        
-        print(self.res)
-        
+                
+        for res in self.res {
+            var temp = [String]()
+            for i in res {
+                let leftdot = String(repeating: ".", count: Int(i)!)
+                let rightdot = String(repeating: ".", count: n - Int(i)! - 1)
+                temp.append(leftdot + "Q" + rightdot)
+            }
+            
+            board.append(temp)
+        }
+                
         return board
     }
 }
-
-let s = Solution()
-s.solveNQueens(8)
 
 // @lc code=end
 
